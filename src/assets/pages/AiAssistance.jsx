@@ -2,6 +2,44 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, User, MessageSquare, ArrowLeft, X, Bot } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
+const Typewriter = ({ text, onComplete }) => {
+    const [displayedText, setDisplayedText] = useState("");
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        if (currentIndex < text.length) {
+            const timeout = setTimeout(() => {
+                setDisplayedText((prev) => prev + text[currentIndex]);
+                setCurrentIndex((prev) => prev + 1);
+            }, 10); // Faster typing speed
+            return () => clearTimeout(timeout);
+        } else if (onComplete) {
+            onComplete();
+        }
+    }, [currentIndex, text, onComplete]);
+
+    return (
+        <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownStyles}>
+            {displayedText}
+        </ReactMarkdown>
+    );
+};
+
+// Moved markdownStyles outside or ensured it's defined before Typewriter
+const markdownStyles = {
+    p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />, // Reduced margin
+    ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-2" {...props} />,
+    ol: ({node, ...props}) => <ol className="list-decimal pl-5 mb-2" {...props} />,
+    li: ({node, ...props}) => <li className="mb-1" {...props} />,
+    h1: ({node, ...props}) => <h1 className="text-lg font-bold mb-2" {...props} />,
+    h2: ({node, ...props}) => <h2 className="text-md font-bold mb-2" {...props} />,
+    h3: ({node, ...props}) => <h3 className="text-sm font-bold mb-2" {...props} />,
+    strong: ({node, ...props}) => <strong className="font-bold" {...props} />,
+    a: ({node, ...props}) => <a className="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noopener noreferrer" {...props} />,
+};
 
 const AiAssistance = () => {
     const [messages, setMessages] = useState([
@@ -9,7 +47,16 @@ const AiAssistance = () => {
     ]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [language, setLanguage] = useState(localStorage.getItem('preferredLanguage') || 'English');
     const messagesEndRef = useRef(null);
+
+    useEffect(() => {
+        const handleLangChange = () => {
+            setLanguage(localStorage.getItem('preferredLanguage') || 'English');
+        };
+        window.addEventListener('languageChange', handleLangChange);
+        return () => window.removeEventListener('languageChange', handleLangChange);
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -29,10 +76,13 @@ const AiAssistance = () => {
         setIsLoading(true);
 
         try {
-            const res = await fetch('http://127.0.0.1:5000/api/ai-assistant', {
+            const res = await fetch('/api/ai-assistant', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: input })
+                body: JSON.stringify({ 
+                    question: input,
+                    language: language 
+                })
             });
             const data = await res.json();
 
@@ -53,6 +103,8 @@ const AiAssistance = () => {
         }
     };
 
+
+
     return (
         <div className="min-h-screen bg-white text-black font-sans flex flex-col">
             <Navbar />
@@ -61,8 +113,8 @@ const AiAssistance = () => {
                 {/* Page Header */}
                 <div className="mb-8 border-b border-black pb-6 flex justify-between items-end">
                     <div>
-                        <h1 className="text-4xl font-black uppercase tracking-tighter">AI ASSISTANCE</h1>
-                        <p className="text-xs text-gray-400 uppercase tracking-[0.3em] mt-2">Personalized Voting Guide</p>
+                        <h1 className="text-4xl font-black tracking-tighter">Ai Assistance</h1>
+                        <p className="text-xs text-gray-400 uppercase tracking-[0.3em] mt-2">Personalized voting guide</p>
                     </div>
                     <Link to="/dashboard" className="text-xs font-bold uppercase flex items-center gap-2 hover:opacity-50 transition-opacity">
                         <ArrowLeft size={14} /> Back to Dashboard
@@ -83,9 +135,19 @@ const AiAssistance = () => {
                                         {msg.sender === 'user' ? <User size={16} /> : <Bot size={16} />}
                                     </div>
                                     <div className={`p-4 text-sm leading-relaxed ${msg.sender === 'user' ? 'bg-black text-white shadow-lg' : 'bg-white border border-black'}`}>
-                                        <p className={msg.sender === 'user' ? 'text-white' : 'text-black'}>
-                                            {msg.text}
-                                        </p>
+                                        {msg.sender === 'user' ? (
+                                            <p className="text-white">{msg.text}</p>
+                                        ) : (
+                                            <div className="text-black max-w-none">
+                                                {msg.id === messages[messages.length - 1].id && msg.sender === 'ai' ? (
+                                                    <Typewriter text={msg.text} onComplete={scrollToBottom} />
+                                                ) : (
+                                                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownStyles}>
+                                                        {msg.text}
+                                                    </ReactMarkdown>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -110,8 +172,8 @@ const AiAssistance = () => {
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="ASK ANYTHING ABOUT VOTING IN INDIA..."
-                            className="flex-1 bg-transparent border-b border-black py-2 outline-none text-xs uppercase font-bold focus:border-gray-400 transition-colors"
+                            placeholder="Ask anything about voting in India..."
+                            className="flex-1 bg-transparent border-b border-black py-2 outline-none text-xs font-bold focus:border-gray-400 transition-colors"
                         />
                         <button
                             type="submit"

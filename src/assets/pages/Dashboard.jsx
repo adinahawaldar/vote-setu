@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   User, 
   CheckCircle, 
@@ -13,6 +13,29 @@ import {
   X,
   ArrowLeft
 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
+const Typewriter = ({ text }) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText((prev) => prev + text[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
+      }, 5);
+      return () => clearTimeout(timeout);
+    }
+  }, [currentIndex, text]);
+
+  return (
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+      {displayedText}
+    </ReactMarkdown>
+  );
+};
 
 const Dashboard = () => {
   const [view, setView] = useState('onboarding'); // 'onboarding' or 'dashboard'
@@ -20,11 +43,24 @@ const Dashboard = () => {
   const [formData, setFormData] = useState({ name: '', age: '', location: '' });
   const [analysisData, setAnalysisData] = useState(null);
   
-  // AI Assistant State
+  // Debug Map Key
+  useEffect(() => {
+    console.log("Maps API Key Loaded:", import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? "Yes (Starts with " + import.meta.env.VITE_GOOGLE_MAPS_API_KEY.substring(0, 5) + ")" : "No");
+  }, []);
+  
   const [isAiOpen, setIsAiOpen] = useState(false);
   const [aiQuestion, setAiQuestion] = useState("");
   const [aiResponse, setAiResponse] = useState("");
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [language, setLanguage] = useState(localStorage.getItem('preferredLanguage') || 'English');
+
+  React.useEffect(() => {
+    const handleLangChange = () => {
+      setLanguage(localStorage.getItem('preferredLanguage') || 'English');
+    };
+    window.addEventListener('languageChange', handleLangChange);
+    return () => window.removeEventListener('languageChange', handleLangChange);
+  }, []);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,17 +71,20 @@ const Dashboard = () => {
     setLoading(true);
     try {
       // 1. Save basic info
-      await fetch('http://127.0.0.1:5000/api/onboard', {
+      await fetch('/api/onboard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
 
       // 2. Get AI Analysis
-      const res = await fetch('http://127.0.0.1:5000/api/dashboard-analysis', {
+      const res = await fetch('/api/dashboard-analysis', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ 
+          ...formData,
+          language: language 
+        })
       });
       const data = await res.json();
       setAnalysisData(data);
@@ -63,10 +102,13 @@ const Dashboard = () => {
     setIsAiLoading(true);
     setAiResponse("");
     try {
-      const res = await fetch('http://127.0.0.1:5000/api/ai-assistant', {
+      const res = await fetch('/api/ai-assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: aiQuestion })
+        body: JSON.stringify({ 
+          question: aiQuestion,
+          language: language 
+        })
       });
       const data = await res.json();
       setAiResponse(data.answer);
@@ -300,7 +342,11 @@ const Dashboard = () => {
               <div className="bg-black text-white p-3 text-xs self-start max-w-[80%] uppercase tracking-tighter">
                 Hello {formData.name}, ask me anything about voting in {formData.location}.
               </div>
-              {aiResponse && <div className="bg-white border border-black p-3 text-xs leading-relaxed uppercase">{aiResponse}</div>}
+              {aiResponse && (
+                <div className="bg-white border border-black p-3 text-xs leading-relaxed prose prose-sm max-w-none">
+                  <Typewriter text={aiResponse} />
+                </div>
+              )}
               {isAiLoading && <div className="animate-pulse text-[10px] uppercase font-bold text-gray-400">AI is thinking...</div>}
             </div>
             <form onSubmit={handleAiAsk} className="p-4 border-t border-black flex gap-2">
