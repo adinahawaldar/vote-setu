@@ -22,3 +22,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Backend
+backend/node_modules
+backend/test_*.js
+backend/check_env.js
+backend/list_models.js
+
+# Artifacts
+.gemini
+antigravity

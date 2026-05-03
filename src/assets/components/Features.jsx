@@ -7,7 +7,6 @@ const coreFeatures = [
   { icon: Languages, title: "Multilingual", desc: "Accessibility for all regions.", span: "md:col-span-1" },
   { icon: Mic, title: "Voice Interaction", desc: "Speak your questions instantly.", span: "md:col-span-1" },
   { icon: MapPinned, title: "Booth Finder", desc: "Real-world map guidance.", span: "md:col-span-1" },
-  { icon: ListChecks, title: "Progress Tracker", desc: "Track your journey visually.", span: "md:col-span-2" },
 ];
 
 const BentoGrid = () => {

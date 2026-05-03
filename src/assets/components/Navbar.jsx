@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const navItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Dashboard', path: '/dashboard' },
+    { name: 'Assistant', path: '/assistance' },
+    { name: 'Simulation', path: '#' },
+  ];
 
   return (
     <nav className="fixed w-full z-50 bg-white">
@@ -10,15 +18,15 @@ const Navbar = () => {
         <div className="flex justify-between h-20 items-center">
           
           {/* LEFT: Brand */}
-          <div className="text-xl font-bold tracking-tighter uppercase cursor-pointer">
+          <Link to="/" className="text-xl font-bold tracking-tighter uppercase cursor-pointer">
             VoteSetu
-          </div>
+          </Link>
 
           {/* DESKTOP: Navigation & Utilities */}
           <div className="hidden md:flex items-center gap-12">
             <div className="flex gap-8 text-sm font-medium uppercase tracking-widest text-black">
-              {['Home', 'Dashboard', 'Assistant', 'Simulation'].map((item) => (
-                <a key={item} href="#" className="hover:opacity-50 transition-opacity">{item}</a>
+              {navItems.map((item) => (
+                <Link key={item.name} to={item.path} className="hover:opacity-50 transition-opacity">{item.name}</Link>
               ))}
             </div>
             
@@ -41,8 +49,8 @@ const Navbar = () => {
       {/* MOBILE: Dropdown Menu */}
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 p-6 flex flex-col gap-6 text-sm font-medium uppercase tracking-widest text-center">
-          {['Home', 'Dashboard', 'Assistant', 'Simulation'].map((item) => (
-            <a key={item} href="#" onClick={() => setIsOpen(false)}>{item}</a>
+          {navItems.map((item) => (
+            <Link key={item.name} to={item.path} onClick={() => setIsOpen(false)}>{item.name}</Link>
           ))}
           <div className="flex flex-col gap-4 pt-6 border-t border-gray-100">
             <button>EN / हिंदी</button>
