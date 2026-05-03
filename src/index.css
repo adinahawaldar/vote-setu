@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  /* Set Book Antiqua as the default serif font */
+  --font-book-antiqua: "Book Antiqua", serif;
+
+  /* 1. Define Continuous Floating Animation */
+  --animate-float-continuous: floatContinuous 6s ease-in-out infinite;
+  
+  /* 2. Define Pulsing Aura for Center Box */
+  --animate-pulse-aura: pulseAura 4s ease-in-out infinite;
+
+  @keyframes floatContinuous {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-10px) rotate(1deg); }
+    66% { transform: translateY(5px) rotate(-1deg); }
+  }
+
+  @keyframes pulseAura {
+    0%, 100% { box-shadow: 0 0 0 0px rgba(50, 19, 110, 0.2); }
+    50% { box-shadow: 0 0 0 20px rgba(50, 19, 110, 0); }
+  }
+}
