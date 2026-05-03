@@ -37,7 +37,6 @@ const Navbar = () => {
 
           {/* LEFT: Brand */}
           <Link to="/" className="text-xl font-bold tracking-tighter uppercase cursor-pointer flex items-center gap-2">
-            <div className="w-8 h-8 bg-black flex items-center justify-center text-white text-xs">VS</div>
             VoteSetu
           </Link>
 
@@ -52,7 +51,7 @@ const Navbar = () => {
             <div className="flex items-center gap-4 border-l border-gray-200 pl-8">
               <div className="flex items-center gap-2">
                 <Globe size={14} className="text-gray-400" />
-                <select 
+                <select
                   value={language}
                   onChange={handleLanguageChange}
                   className="text-[10px] font-bold uppercase tracking-widest bg-transparent border-none outline-none cursor-pointer hover:opacity-50 appearance-none"
@@ -82,7 +81,7 @@ const Navbar = () => {
           <div className="flex flex-col gap-4 pt-6 border-t border-gray-100 items-center">
             <div className="flex items-center gap-2">
               <Globe size={14} />
-              <select 
+              <select
                 value={language}
                 onChange={handleLanguageChange}
                 className="bg-transparent border-none outline-none font-bold uppercase"

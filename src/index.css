@@ -1,13 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  /* Set Book Antiqua as the default serif font */
-  --font-book-antiqua: "Book Antiqua", serif;
+  --font-book-antiqua: "Book Antiqua", "Palatino", "Palatino Linotype", "Palatino LT STD", "Georgia", serif;
 
-  /* 1. Define Continuous Floating Animation */
   --animate-float-continuous: floatContinuous 6s ease-in-out infinite;
   
-  /* 2. Define Pulsing Aura for Center Box */
   --animate-pulse-aura: pulseAura 4s ease-in-out infinite;
 
   @keyframes floatContinuous {
@@ -20,4 +17,8 @@
     0%, 100% { box-shadow: 0 0 0 0px rgba(50, 19, 110, 0.2); }
     50% { box-shadow: 0 0 0 20px rgba(50, 19, 110, 0); }
   }
+}
+
+body {
+  font-family: "Book Antiqua", "Palatino", "Palatino Linotype", "Palatino LT STD", "Georgia", serif;
 }
