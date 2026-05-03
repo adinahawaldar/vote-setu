@@ -1,14 +1,12 @@
-# 🗳️ VoteSetu: Your Bridge to Democracy
+#  VoteSetu: Your Bridge to Democracy
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](https://opensource.org/licenses/MIT)
-[![AI Powered](https://img.shields.io/badge/AI-Gemini%202.0-blue.svg)](https://deepmind.google/technologies/gemini/)
-[![Hackathon](https://img.shields.io/badge/Google-Virtual%20Prompt%20War-orange.svg)](https://example.com)
+
 
 **VoteSetu** is an advanced, AI-driven platform designed to simplify and democratize the voting process in India. Built for the **Google Virtual Prompt War Hackathon**, it leverages cutting-edge Large Language Models (LLMs) and sophisticated prompt engineering to provide personalized, multilingual guidance to millions of voters.
 
 ---
 
-## 🌟 Key Features
+##  Key Features
 
 ### 1. Multilingual AI Assistant
 Navigate the complexities of Indian elections in your mother tongue. VoteSetu supports:
@@ -33,11 +31,11 @@ The core of VoteSetu lies in its **Prompt Architecture**. We use "Chain of Thoug
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: React.js, Vite, Tailwind CSS, Lucide Icons.
 - **Backend**: Node.js, Express.
-- **AI Engine**: Google Gemini 2.0 (via OpenRouter) for high-speed, high-accuracy generation.
+- **AI Engine**: Google Gemini 2.0 for high-speed, high-accuracy generation.
 - **Maps**: Google Maps Embed API.
 - **Deployment**: Ready for Docker / Google Cloud Run.
 
@@ -87,7 +85,7 @@ The core of VoteSetu lies in its **Prompt Architecture**. We use "Chain of Thoug
 
 ---
 
-## 🧠 The "Prompt War" Edge
+##  The "Prompt War" Edge
 
 VoteSetu doesn't just call an API; it orchestrates a specialized environment for the AI. Our system prompts are engineered to:
 - **Force Language Consistency**: Ensuring that even complex legal terms are translated accurately within the JSON structure.
@@ -96,21 +94,11 @@ VoteSetu doesn't just call an API; it orchestrates a specialized environment for
 
 ---
 
-## 📸 Screenshots
 
-*(Add your screenshots here after deployment)*
 
----
-
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
 
 ---
 
